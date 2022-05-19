@@ -109,7 +109,6 @@ public class ResourceAvailability implements Serializable {
     private LocalDateTime updated;
 
     @OneToMany(mappedBy = "resourceAvailability")
-    @JsonManagedReference
     @JsonIgnore
     private List<ResourceSlotReservation> resourceSlotReservation;
 
