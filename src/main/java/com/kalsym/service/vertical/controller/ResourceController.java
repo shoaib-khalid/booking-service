@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author hasan
  */
 /**
- * 
+ *
  * This controller is used for get,post,put and delete operations of a resource
  */
 @RestController
@@ -214,6 +215,37 @@ public class ResourceController {
 
         response.setStatus(HttpStatus.FOUND);
         response.setData(optionalResource.get());
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    @DeleteMapping(path = {""}, name = "resource-delete-by-id", produces = "application/json")
+    public ResponseEntity<HttpResponse> deleteResourceById(HttpServletRequest request,
+            @RequestParam(name = "storeId", required = true) String storeId,
+            @RequestParam(name = "resourceId", required = true) String resourceId) {
+        String logprefix = request.getRequestURI();
+        HttpResponse response = new HttpResponse(request.getRequestURI());
+        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "", "");
+
+        Optional<Store> optionalStore = storeRepository.findById(storeId);
+
+        if (!optionalStore.isPresent()) {
+            Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, " NOT_FOUND storeId: " + storeId);
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setError("store not found");
+            return ResponseEntity.status(response.getStatus()).body(response);
+        }
+
+        Optional<Resource> optionalResource = resourceRepository.findById(resourceId);
+
+        if (!optionalResource.isPresent()) {
+            Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, " NOT_FOUND: " + resourceId, "");
+            response.setStatus(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(response.getStatus()).body(response);
+        }
+        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "Reservation Resource found", "");
+        resourceRepository.delete(optionalResource.get());
+        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "resource deleted, with id: {}", resourceId);
+        response.setStatus(HttpStatus.OK);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 

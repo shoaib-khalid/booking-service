@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/resources/slots")
+@CrossOrigin("*")
 public class ResourceSlotReservationController {
 
     @Autowired
@@ -518,7 +520,14 @@ public class ResourceSlotReservationController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
-    private long convertToMillisecondsEpoch(LocalDate date, LocalTime time) {
+    /**
+     * Converts the given date and time to milliseconds in UTC Epoch
+     *
+     * @param date
+     * @param time
+     * @return long millisecondsUTCEpoch
+     */
+    public static long convertToMillisecondsEpoch(LocalDate date, LocalTime time) {
         LocalDateTime dt = LocalDateTime.parse(date + "T" + time);
         return dt.toInstant(ZoneOffset.UTC).toEpochMilli();
     }
@@ -562,8 +571,9 @@ public class ResourceSlotReservationController {
         return false;
     }
 
-//    private String convertToDatetime(long timeInMilliseconds) {
-//        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
-//        return dateTimeFormatter.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(timeInMilliseconds), ZoneId.of("UTC")));
-//    }
+    public static String convertToDatetime(long timeInMilliseconds) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
+        return dateTimeFormatter.format(LocalDateTime.ofInstant(Instant.ofEpochMilli(timeInMilliseconds), ZoneId.of("UTC")));
+    }
+
 }

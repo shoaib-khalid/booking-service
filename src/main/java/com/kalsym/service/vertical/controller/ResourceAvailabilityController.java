@@ -5,6 +5,18 @@
 package com.kalsym.service.vertical.controller;
 
 import com.kalsym.service.vertical.ServiceVerticalApplication;
+import com.kalsym.service.vertical.enums.AvailabilityDay;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.EVERYDAY;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.FRIDAY;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.FRIDAY_SUNDAY;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.MONDAY;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.MONDAY_FRIDAY;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.SATURDAY;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.SATURDAY_SUNDAY;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.SUNDAY;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.THURSDAY;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.TUESDAY;
+import static com.kalsym.service.vertical.enums.AvailabilityDay.WEDNESDAY;
 import com.kalsym.service.vertical.model.Resource;
 import com.kalsym.service.vertical.model.ResourceAvailability;
 import com.kalsym.service.vertical.model.store.Store;
@@ -13,8 +25,13 @@ import com.kalsym.service.vertical.repository.ResourceRepository;
 import com.kalsym.service.vertical.repository.StoreRepository;
 import com.kalsym.service.vertical.utility.HttpResponse;
 import com.kalsym.service.vertical.utility.Logger;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,8 +50,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @author hasan
  */
 /**
- * 
- * This controller is used for get,post,put and delete operations of resource availabilities
+ *
+ * This controller is used for get,post,put and delete operations of resource
+ * availabilities
  */
 @RestController
 @RequestMapping("/resources/availabilities/")
@@ -140,12 +158,12 @@ public class ResourceAvailabilityController {
         List<ResourceAvailability> resourcesAvailabilties = resourceAvailabilityRepository.findByResourceId(resourceId);
 
         //If end time is before start time send not acceptable
-        if (bodyResourceAvailability.getStartTime().isAfter(bodyResourceAvailability.getEndTime())) {
-            Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "End Time can not be before start time", "");
-            response.setStatus(HttpStatus.NOT_ACCEPTABLE);
-            response.setData("End Time can not be before start time");
-            return ResponseEntity.status(response.getStatus()).body(response);
-        }
+//        if (bodyResourceAvailability.getStartTime().isAfter(bodyResourceAvailability.getEndTime())) {
+//            Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "End Time can not be before start time", "");
+//            response.setStatus(HttpStatus.NOT_ACCEPTABLE);
+//            response.setData("End Time can not be before start time");
+//            return ResponseEntity.status(response.getStatus()).body(response);
+//        }
 
         //Check if the resource being created does not overlap with any other availabilities
         for (ResourceAvailability resourceAvailability : resourcesAvailabilties) {
@@ -157,6 +175,62 @@ public class ResourceAvailabilityController {
                     response.setStatus(HttpStatus.CONFLICT);
                     response.setData("Resource duration overlapping");
                     return ResponseEntity.status(response.getStatus()).body(response);
+                }
+            } else if (resourceAvailability.getAvailabilityDay().equals(MONDAY_FRIDAY)) {
+                if (bodyResourceAvailability.getAvailabilityDay().equals(MONDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(TUESDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(WEDNESDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(THURSDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(FRIDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(EVERYDAY)) {
+                    if (resourceAvailability.getStartTime().equals(bodyResourceAvailability.getStartTime())
+                            && resourceAvailability.getEndTime().equals(bodyResourceAvailability.getEndTime())) {
+                        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "resource duration overlapping", "");
+                        response.setStatus(HttpStatus.CONFLICT);
+                        response.setData("Resource duration overlapping");
+                        return ResponseEntity.status(response.getStatus()).body(response);
+                    }
+                }
+            } else if (resourceAvailability.getAvailabilityDay().equals(FRIDAY_SUNDAY)) {
+                if (bodyResourceAvailability.getAvailabilityDay().equals(FRIDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(SATURDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(SUNDAY)) {
+                    if (resourceAvailability.getStartTime().equals(bodyResourceAvailability.getStartTime())
+                            && resourceAvailability.getEndTime().equals(bodyResourceAvailability.getEndTime())) {
+                        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "resource duration overlapping", "");
+                        response.setStatus(HttpStatus.CONFLICT);
+                        response.setData("Resource duration overlapping");
+                        return ResponseEntity.status(response.getStatus()).body(response);
+                    }
+                }
+            } else if (resourceAvailability.getAvailabilityDay().equals(SATURDAY_SUNDAY)) {
+                if (bodyResourceAvailability.getAvailabilityDay().equals(SATURDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(SUNDAY)) {
+                    if (resourceAvailability.getStartTime().equals(bodyResourceAvailability.getStartTime())
+                            && resourceAvailability.getEndTime().equals(bodyResourceAvailability.getEndTime())) {
+                        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "resource duration overlapping", "");
+                        response.setStatus(HttpStatus.CONFLICT);
+                        response.setData("Resource duration overlapping");
+                        return ResponseEntity.status(response.getStatus()).body(response);
+                    }
+                }
+            } else if (resourceAvailability.getAvailabilityDay().equals(EVERYDAY)) {
+                if (bodyResourceAvailability.getAvailabilityDay().equals(MONDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(TUESDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(WEDNESDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(THURSDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(FRIDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(SATURDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(SUNDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(FRIDAY_SUNDAY)
+                        || bodyResourceAvailability.getAvailabilityDay().equals(SATURDAY_SUNDAY)) {
+                    if (resourceAvailability.getStartTime().equals(bodyResourceAvailability.getStartTime())
+                            && resourceAvailability.getEndTime().equals(bodyResourceAvailability.getEndTime())) {
+                        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "resource duration overlapping", "");
+                        response.setStatus(HttpStatus.CONFLICT);
+                        response.setData("Resource duration overlapping");
+                        return ResponseEntity.status(response.getStatus()).body(response);
+                    }
                 }
             }
         }
@@ -172,6 +246,13 @@ public class ResourceAvailabilityController {
         if (bodyResourceAvailability.getResource().getNumberOfWeeksReservable() == 0) {
             bodyResourceAvailability.getResource().setNumberOfWeeksReservable(1);
         }
+
+        if (null == bodyResourceAvailability.getOffsetHours()) {
+            bodyResourceAvailability.setOffsetHours("+00:00");
+        }
+        bodyResourceAvailability.setStartTime(zoneOffset(bodyResourceAvailability.getOffsetHours(), bodyResourceAvailability.getStartTime()));
+
+        bodyResourceAvailability.setEndTime(zoneOffset(bodyResourceAvailability.getOffsetHours(), bodyResourceAvailability.getEndTime()));
 
         bodyResourceAvailability.setStore(optionalStore.get());
         ResourceAvailability savedReservationResource = resourceAvailabilityRepository.save(bodyResourceAvailability);
@@ -207,14 +288,30 @@ public class ResourceAvailabilityController {
             response.setStatus(HttpStatus.NOT_FOUND);
             return ResponseEntity.status(response.getStatus()).body(response);
         }
-
-        //If end time is before start time send not acceptable
-        if (bodyResourceAvailability.getStartTime().isAfter(bodyResourceAvailability.getEndTime())) {
-            Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "End Time can not be before start time", "");
-            response.setStatus(HttpStatus.NOT_ACCEPTABLE);
-            response.setData("End Time can not be before start time");
-            return ResponseEntity.status(response.getStatus()).body(response);
+        if (null != bodyResourceAvailability.getStartTime()) {
+            if (null != bodyResourceAvailability.getOffsetHours()) {
+                bodyResourceAvailability.setStartTime(zoneOffset(bodyResourceAvailability.getOffsetHours(), bodyResourceAvailability.getStartTime()));
+            } else {
+                bodyResourceAvailability.setStartTime(zoneOffset(optionalResourceAvailability.get().getOffsetHours(), bodyResourceAvailability.getStartTime()));
+            }
         }
+
+        if (null != bodyResourceAvailability.getEndTime()) {
+            if (null != bodyResourceAvailability.getOffsetHours()) {
+                bodyResourceAvailability.setEndTime(zoneOffset(bodyResourceAvailability.getOffsetHours(), bodyResourceAvailability.getEndTime()));
+            } else {
+                bodyResourceAvailability.setEndTime(zoneOffset(optionalResourceAvailability.get().getOffsetHours(), bodyResourceAvailability.getEndTime()));
+            }
+        }
+        //If end time is before start time send not acceptable
+//        if (null != bodyResourceAvailability.getStartTime()) {
+//            if (bodyResourceAvailability.getEndTime().isBefore(bodyResourceAvailability.getStartTime())) {
+//                Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "End Time can not be before start time", "");
+//                response.setStatus(HttpStatus.NOT_ACCEPTABLE);
+//                response.setData("End Time can not be before start time");
+//                return ResponseEntity.status(response.getStatus()).body(response);
+//            }
+//        }
 
         ResourceAvailability resourceAvailability = optionalResourceAvailability.get();
 
@@ -223,7 +320,7 @@ public class ResourceAvailabilityController {
         //Check if the resource being created does not overlap with any other availabilities
         for (ResourceAvailability currentResourceAvailability : resourceAvailabilties) {
 
-            if (bodyResourceAvailability.getAvailabilityDay() == null) {
+            if (null == bodyResourceAvailability.getAvailabilityDay()) {
                 if (!resourceAvailability.getId().equals(currentResourceAvailability.getId())) {
                     if (resourceAvailability.getAvailabilityDay().equals(currentResourceAvailability.getAvailabilityDay())) {
                         if (!((bodyResourceAvailability.getStartTime().isAfter(currentResourceAvailability.getEndTime()) || bodyResourceAvailability.getStartTime().equals(currentResourceAvailability.getEndTime()))
@@ -245,6 +342,62 @@ public class ResourceAvailabilityController {
                             response.setStatus(HttpStatus.CONFLICT);
                             response.setData("Resource duration overlapping");
                             return ResponseEntity.status(response.getStatus()).body(response);
+                        }
+                    } else if (resourceAvailability.getAvailabilityDay().equals(MONDAY_FRIDAY)) {
+                        if (bodyResourceAvailability.getAvailabilityDay().equals(MONDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(TUESDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(WEDNESDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(THURSDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(FRIDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(EVERYDAY)) {
+                            if (resourceAvailability.getStartTime().equals(bodyResourceAvailability.getStartTime())
+                                    && resourceAvailability.getEndTime().equals(bodyResourceAvailability.getEndTime())) {
+                                Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "resource duration overlapping", "");
+                                response.setStatus(HttpStatus.CONFLICT);
+                                response.setData("Resource duration overlapping");
+                                return ResponseEntity.status(response.getStatus()).body(response);
+                            }
+                        }
+                    } else if (resourceAvailability.getAvailabilityDay().equals(FRIDAY_SUNDAY)) {
+                        if (bodyResourceAvailability.getAvailabilityDay().equals(FRIDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(SATURDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(SUNDAY)) {
+                            if (resourceAvailability.getStartTime().equals(bodyResourceAvailability.getStartTime())
+                                    && resourceAvailability.getEndTime().equals(bodyResourceAvailability.getEndTime())) {
+                                Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "resource duration overlapping", "");
+                                response.setStatus(HttpStatus.CONFLICT);
+                                response.setData("Resource duration overlapping");
+                                return ResponseEntity.status(response.getStatus()).body(response);
+                            }
+                        }
+                    } else if (resourceAvailability.getAvailabilityDay().equals(SATURDAY_SUNDAY)) {
+                        if (bodyResourceAvailability.getAvailabilityDay().equals(SATURDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(SUNDAY)) {
+                            if (resourceAvailability.getStartTime().equals(bodyResourceAvailability.getStartTime())
+                                    && resourceAvailability.getEndTime().equals(bodyResourceAvailability.getEndTime())) {
+                                Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "resource duration overlapping", "");
+                                response.setStatus(HttpStatus.CONFLICT);
+                                response.setData("Resource duration overlapping");
+                                return ResponseEntity.status(response.getStatus()).body(response);
+                            }
+                        }
+                    } else if (resourceAvailability.getAvailabilityDay().equals(EVERYDAY)) {
+                        if (bodyResourceAvailability.getAvailabilityDay().equals(MONDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(TUESDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(WEDNESDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(THURSDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(FRIDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(SATURDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(SUNDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(FRIDAY_SUNDAY)
+                                || bodyResourceAvailability.getAvailabilityDay().equals(SATURDAY_SUNDAY)) {
+                            if (resourceAvailability.getStartTime().equals(bodyResourceAvailability.getStartTime())
+                                    && resourceAvailability.getEndTime().equals(bodyResourceAvailability.getEndTime())) {
+                                Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "resource duration overlapping", "");
+                                response.setStatus(HttpStatus.CONFLICT);
+                                response.setData("Resource duration overlapping");
+                                return ResponseEntity.status(response.getStatus()).body(response);
+                            }
                         }
                     }
                 }
@@ -289,9 +442,31 @@ public class ResourceAvailabilityController {
 
         Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "Reservation Resource found", "");
         resourceAvailabilityRepository.delete(optionalResourceAvailability.get());
-        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "product deleted, with id: {}", resourceAvailabilityId);
+        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "resource availability deleted, with id: {}", resourceAvailabilityId);
         response.setStatus(HttpStatus.OK);
         return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    public static LocalTime zoneOffset(String offsetHours, LocalTime time) {
+        char symbol = offsetHours.charAt(0);
+        String trimedTime = offsetHours.substring(1);
+        LocalTime offsetTime = LocalTime.parse(trimedTime);
+        switch (symbol) {
+            case '+': {
+                time = time.minusHours(offsetTime.getHour());
+                time = time.minusMinutes(offsetTime.getMinute());
+                break;
+            }
+            case '-': {
+                time = time.plusHours(offsetTime.getHour());
+                time = time.plusMinutes(offsetTime.getMinute());
+                break;
+            }
+            default: {
+                System.out.println("Invalid Offset Hours");
+            }
+        }
+        return time;
     }
 
 }

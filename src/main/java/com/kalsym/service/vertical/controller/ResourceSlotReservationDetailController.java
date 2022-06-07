@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/resources/slots/reservations")
+@CrossOrigin("*")
 public class ResourceSlotReservationDetailController {
 
     @Autowired
@@ -224,9 +226,9 @@ public class ResourceSlotReservationDetailController {
             return ResponseEntity.status(response.getStatus()).body(response);
         }
 
-        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "Reservation found", "");
+        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "Resource Slot Reservation Detail found", "");
         resourceSlotReservationDetailRepository.delete(optionalResourceSlotReservationDetail.get());
-        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "Reservation deleted, with id: {}", resourceSlotReservationDetailId);
+        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logprefix, "Resource Slot Reservation Detail deleted, with id: {}", resourceSlotReservationDetailId);
         response.setStatus(HttpStatus.OK);
         return ResponseEntity.status(response.getStatus()).body(response);
 

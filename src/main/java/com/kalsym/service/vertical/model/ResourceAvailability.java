@@ -72,18 +72,24 @@ public class ResourceAvailability implements Serializable {
     private Integer durationInMinutes;
 
     /**
-     * The starting time of a resource availability
+     * The starting time of a resource availability in UTC
      */
     @Column(name = "startTime", nullable = false)
     @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
 
     /**
-     * The last/ending time of a resource availability
+     * The last/ending time of a resource availability in UTC
      */
     @Column(name = "endTime", nullable = false)
     @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
+
+    /**
+     * The offset hours to add or minus to bring the start and end time to UTC
+     */
+    @Column(name = "offsetHours", length = 10)
+    private String offsetHours;
 
     /**
      * Adds the given time in between two slots
