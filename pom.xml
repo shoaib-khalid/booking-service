@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.kalsym</groupId>
-    <artifactId>service.vertical</artifactId>
+    <artifactId>services-vertical-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>service-vertical</name>
+    <name>services-vertical-service</name>
     <description>Service Vertical for Symplified Merchant Store</description>
     <properties>
         <java.version>11</java.version>
