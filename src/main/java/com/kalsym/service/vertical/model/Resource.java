@@ -46,7 +46,13 @@ public class Resource {
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", length = 50)
     private String id;
-
+    
+    /**
+     * Name of the resource
+     */
+    @Column(name ="name", length = 500)
+    private String name;
+    
     /**
      * The current status of a resource, Default value is "DEFAULT"
      */
