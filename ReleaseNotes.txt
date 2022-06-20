@@ -1,0 +1,26 @@
+Version v 0.0.2
+-----------------------------------------------------------------------
+Date: 20-May-2022
+Developer: Hassan Sajjad Swati
+
+Changed snapshot 0.0.1 to 0.0.2
+
+Updated update method in Resource Model
+ 
+Updated Resource Controller
+
+Changed java version to 1.8
+
+Added Cross Origin
+ 
+Added a new column in resource, Updated rest controller for resource
+
+Renamed Project
+
+Changed how json object are shown in response
+
+-----------------------------------------------------------------------
+Date: 18-May-2022
+Developer: Hassan Sajjad Swati
+
+Created Initial version of service-vertical
