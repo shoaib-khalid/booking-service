@@ -153,11 +153,10 @@ public class ResourceController {
         response.setData(resourceRepository.save(resource));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
-
+    
     @GetMapping(path = {""}, name = "resource-get-all", produces = "application/json")
     public ResponseEntity<HttpResponse> getResources(HttpServletRequest request,
-            @RequestParam(name = "storeId", required = true) String storeId,
-            @RequestParam(name = "productId", required = true) String productId) {
+            @RequestParam(name = "storeId", required = true) String storeId) {
 
         String logPrefix = request.getRequestURI();
         HttpResponse response = new HttpResponse(request.getRequestURI());
@@ -169,15 +168,6 @@ public class ResourceController {
             Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logPrefix, " NOT_FOUND storeId: " + storeId);
             response.setStatus(HttpStatus.NOT_FOUND);
             response.setError("store not found");
-            return ResponseEntity.status(response.getStatus()).body(response);
-        }
-
-        Optional<Product> optProduct = productRepository.findById(productId);
-
-        if (!optProduct.isPresent()) {
-            Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logPrefix, " NOT_FOUND storeId: " + storeId);
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setError("product not found");
             return ResponseEntity.status(response.getStatus()).body(response);
         }
 
@@ -215,7 +205,7 @@ public class ResourceController {
             return ResponseEntity.status(response.getStatus()).body(response);
         }
 
-        response.setStatus(HttpStatus.FOUND);
+        response.setStatus(HttpStatus.OK);
         response.setData(optionalResource.get());
         return ResponseEntity.status(response.getStatus()).body(response);
     }

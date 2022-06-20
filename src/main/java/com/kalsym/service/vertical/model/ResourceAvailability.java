@@ -57,7 +57,7 @@ public class ResourceAvailability implements Serializable {
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", length = 50)
     private String id;
-
+    
     /**
      * The available days of a resource
      */
