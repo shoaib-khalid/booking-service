@@ -204,7 +204,7 @@ public class ResourceController {
             response.setError("resource not found");
             return ResponseEntity.status(response.getStatus()).body(response);
         }
-
+        
         response.setStatus(HttpStatus.OK);
         response.setData(optionalResource.get());
         return ResponseEntity.status(response.getStatus()).body(response);
@@ -240,5 +240,5 @@ public class ResourceController {
         response.setStatus(HttpStatus.OK);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
-
+    
 }

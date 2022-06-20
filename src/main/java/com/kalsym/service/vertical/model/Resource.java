@@ -84,6 +84,11 @@ public class Resource {
     private List<ResourceAvailability> resourceAvailability;
 
     public void update(Resource resource) {
+        
+        if (null != resource.getName())
+        {
+            name = resource.getName();
+        }
 
         if (null != resource.getNumberOfWeeksReservable()) {
             numberOfWeeksReservable = resource.getNumberOfWeeksReservable();
