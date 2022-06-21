@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kalsym.service.vertical.enums.ResourceStatus;
 import com.kalsym.service.vertical.model.product.Product;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -75,7 +76,7 @@ public class Resource {
     /**
      * The product of a resource
      */
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false,cascade = CascadeType.ALL)
     @JoinColumn(name = "productId", referencedColumnName = "id", nullable = false)
     private Product resourceProduct;
 
