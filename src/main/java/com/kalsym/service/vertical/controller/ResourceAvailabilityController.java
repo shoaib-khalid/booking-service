@@ -167,6 +167,13 @@ public class ResourceAvailabilityController {
 //            return ResponseEntity.status(response.getStatus()).body(response);
 //        }
 
+        if (null == bodyResourceAvailability.getOffsetHours()) {
+            bodyResourceAvailability.setOffsetHours("+00:00");
+        }
+        bodyResourceAvailability.setStartTime(zoneOffset(bodyResourceAvailability.getOffsetHours(), bodyResourceAvailability.getStartTime()));
+
+        bodyResourceAvailability.setEndTime(zoneOffset(bodyResourceAvailability.getOffsetHours(), bodyResourceAvailability.getEndTime()));
+
         //Check if the resource being created does not overlap with any other availabilities
         for (ResourceAvailability resourceAvailability : resourcesAvailabilties) {
 
@@ -248,13 +255,6 @@ public class ResourceAvailabilityController {
         if (bodyResourceAvailability.getResource().getNumberOfWeeksReservable() == 0) {
             bodyResourceAvailability.getResource().setNumberOfWeeksReservable(1);
         }
-
-        if (null == bodyResourceAvailability.getOffsetHours()) {
-            bodyResourceAvailability.setOffsetHours("+00:00");
-        }
-        bodyResourceAvailability.setStartTime(zoneOffset(bodyResourceAvailability.getOffsetHours(), bodyResourceAvailability.getStartTime()));
-
-        bodyResourceAvailability.setEndTime(zoneOffset(bodyResourceAvailability.getOffsetHours(), bodyResourceAvailability.getEndTime()));
 
         bodyResourceAvailability.setStore(optionalStore.get());
         ResourceAvailability savedReservationResource = resourceAvailabilityRepository.save(bodyResourceAvailability);

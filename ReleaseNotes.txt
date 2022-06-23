@@ -6,6 +6,7 @@ Developer: Hassan Sajjad Swati
 -Created v 1.0.0 from 0.0.2
 -Fixed Resource not being deleted, Had to add cascade type in one to one relation of resource model with product.
 -Fixed Cros error and Invalid character found in the request target Error
+-Fixed Overlapping Resource Availability
 
 Version v 0.0.2
 -----------------------------------------------------------------------
