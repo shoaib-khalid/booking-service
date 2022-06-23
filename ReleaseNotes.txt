@@ -5,30 +5,31 @@ Developer: Hassan Sajjad Swati
 
 -Created v 1.0.0 from 0.0.2
 -Fixed Resource not being deleted, Had to add cascade type in one to one relation of resource model with product.
+-Fixed Cros error and Invalid character found in the request target Error
 
 Version v 0.0.2
 -----------------------------------------------------------------------
 Date: 20-May-2022
 Developer: Hassan Sajjad Swati
 
-Changed snapshot 0.0.1 to 0.0.2
+-Changed snapshot 0.0.1 to 0.0.2
 
-Updated update method in Resource Model
+-Updated update method in Resource Model
  
-Updated Resource Controller
+-Updated Resource Controller
 
-Changed java version to 1.8
+-Changed java version to 1.8
 
-Added Cross Origin
+-Added Cross Origin
  
-Added a new column in resource, Updated rest controller for resource
+-Added a new column in resource, Updated rest controller for resource
 
-Renamed Project
+-Renamed Project
 
-Changed how json object are shown in response
+-Changed how json object are shown in response
 
 -----------------------------------------------------------------------
 Date: 18-May-2022
 Developer: Hassan Sajjad Swati
 
-Created Initial version of service-vertical
+-Created Initial version of service-vertical
