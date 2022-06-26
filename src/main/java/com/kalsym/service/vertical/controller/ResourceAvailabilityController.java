@@ -5,7 +5,6 @@
 package com.kalsym.service.vertical.controller;
 
 import com.kalsym.service.vertical.ServiceVerticalApplication;
-import com.kalsym.service.vertical.enums.AvailabilityDay;
 import static com.kalsym.service.vertical.enums.AvailabilityDay.EVERYDAY;
 import static com.kalsym.service.vertical.enums.AvailabilityDay.FRIDAY;
 import static com.kalsym.service.vertical.enums.AvailabilityDay.FRIDAY_SUNDAY;
@@ -26,12 +25,8 @@ import com.kalsym.service.vertical.repository.StoreRepository;
 import com.kalsym.service.vertical.utility.HttpResponse;
 import com.kalsym.service.vertical.utility.Logger;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -88,6 +83,40 @@ public class ResourceAvailabilityController {
 
         List<ResourceAvailability> resourceAvailabilites = resourceAvailabilityRepository.findByStoreId(storeId);
 
+        response.setStatus(HttpStatus.OK);
+        response.setData(resourceAvailabilites);
+        return ResponseEntity.status(response.getStatus()).body(response);
+
+    }
+
+    @GetMapping(path = {"/get-by-resource"}, name = "resource-availabilities-get-by-resourceId", produces = "application/json")
+    public ResponseEntity<HttpResponse> getResourceAvailabilitiesByResourceId(HttpServletRequest request,
+            @RequestParam(name = "storeId", required = true) String storeId,
+            @RequestParam(name = "resourceId", required = true) String resourceId) {
+
+        String logPrefix = request.getRequestURI();
+        HttpResponse response = new HttpResponse(request.getRequestURI());
+        Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logPrefix, "", "");
+
+        Optional<Store> optionalStore = storeRepository.findById(storeId);
+
+        if (!optionalStore.isPresent()) {
+            Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logPrefix, " NOT_FOUND storeId: " + storeId);
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setError("store not found");
+            return ResponseEntity.status(response.getStatus()).body(response);
+        }
+
+        Optional<Resource> optionalResource = resourceRepository.findById(resourceId);
+        if (!optionalResource.isPresent()) {
+            Logger.application.info(Logger.pattern, ServiceVerticalApplication.VERSION, logPrefix, " NOT_FOUND resourceId: " + resourceId);
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setError("resource not found");
+            return ResponseEntity.status(response.getStatus()).body(response);
+        }
+
+        List<ResourceAvailability> resourceAvailabilites = resourceAvailabilityRepository.findByResourceId(resourceId);
+        
         response.setStatus(HttpStatus.OK);
         response.setData(resourceAvailabilites);
         return ResponseEntity.status(response.getStatus()).body(response);
@@ -166,7 +195,6 @@ public class ResourceAvailabilityController {
 //            response.setData("End Time can not be before start time");
 //            return ResponseEntity.status(response.getStatus()).body(response);
 //        }
-
         if (null == bodyResourceAvailability.getOffsetHours()) {
             bodyResourceAvailability.setOffsetHours("+00:00");
         }

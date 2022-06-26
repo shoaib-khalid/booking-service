@@ -1,3 +1,10 @@
+Version v 1.0.1
+-----------------------------------------------------------------------
+Date: 26-May-2022
+Developer: Hassan Sajjad Swati
+
+-Create a new endpoint in resourceAvailability Controller for fetching resourceAvailabilties by resourceId
+
 Version v 1.0.0
 -----------------------------------------------------------------------
 Date: 20-May-2022
