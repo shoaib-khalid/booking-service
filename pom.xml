@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.kalsym</groupId>
     <artifactId>services-vertical-service</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>services-vertical-service</name>
     <description>Service Vertical for Symplified Merchant Store</description>
     <properties>
