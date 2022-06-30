@@ -158,7 +158,14 @@ public class ResourceAvailability implements Serializable {
         if (reservationResource.getDescription() != null) {
             description = reservationResource.getDescription();
         }
-
+        
+        if (reservationResource.getOffsetHours() != null){
+            offsetHours = reservationResource.getOffsetHours();
+        }
+        
+        if (reservationResource.getConfirmationMethod() != null){
+            confirmationMethod = reservationResource.getConfirmationMethod();
+        }
     }
 
 }

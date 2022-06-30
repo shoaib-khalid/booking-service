@@ -1,3 +1,10 @@
+Version v 1.0.2
+-----------------------------------------------------------------------
+Date: 30-May-2022
+Developer: Hassan Sajjad Swati
+
+-Fixed offset hours and confirmation method not being updated
+
 Version v 1.0.1
 -----------------------------------------------------------------------
 Date: 26-May-2022
