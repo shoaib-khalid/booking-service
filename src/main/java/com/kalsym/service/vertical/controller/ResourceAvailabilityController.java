@@ -66,7 +66,9 @@ public class ResourceAvailabilityController {
 
     @GetMapping(path = {""}, name = "resource-availabilities-get", produces = "application/json")
     public ResponseEntity<HttpResponse> getResourceAvailabilities(HttpServletRequest request,
-            @RequestParam(name = "storeId", required = true) String storeId) {
+            @RequestParam(name = "storeId", required = true) String storeId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
 
         String logPrefix = request.getRequestURI();
         HttpResponse response = new HttpResponse(request.getRequestURI());
@@ -92,7 +94,9 @@ public class ResourceAvailabilityController {
     @GetMapping(path = {"/get-by-resource"}, name = "resource-availabilities-get-by-resourceId", produces = "application/json")
     public ResponseEntity<HttpResponse> getResourceAvailabilitiesByResourceId(HttpServletRequest request,
             @RequestParam(name = "storeId", required = true) String storeId,
-            @RequestParam(name = "resourceId", required = true) String resourceId) {
+            @RequestParam(name = "resourceId", required = true) String resourceId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
 
         String logPrefix = request.getRequestURI();
         HttpResponse response = new HttpResponse(request.getRequestURI());
@@ -116,7 +120,7 @@ public class ResourceAvailabilityController {
         }
 
         List<ResourceAvailability> resourceAvailabilites = resourceAvailabilityRepository.findByResourceId(resourceId);
-        
+
         response.setStatus(HttpStatus.OK);
         response.setData(resourceAvailabilites);
         return ResponseEntity.status(response.getStatus()).body(response);
@@ -445,7 +449,7 @@ public class ResourceAvailabilityController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
-    @DeleteMapping(path = {""}, name = "resource-availability-delete-by-id", produces = "application/json")
+    @DeleteMapping(path = {""}, name = "resource-availability-delete-by-id")
     public ResponseEntity<HttpResponse> deleteReservationResourceById(HttpServletRequest request,
             @RequestParam(name = "storeId", required = true) String storeId,
             @RequestParam(name = "resourceAvailabilityId", required = true) String resourceAvailabilityId) {

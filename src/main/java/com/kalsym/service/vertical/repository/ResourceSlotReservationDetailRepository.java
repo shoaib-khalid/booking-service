@@ -6,6 +6,7 @@ package com.kalsym.service.vertical.repository;
 
 import com.kalsym.service.vertical.model.ResourceSlotReservationDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,6 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author hasan
  */
 @Repository
-public interface ResourceSlotReservationDetailRepository extends JpaRepository<ResourceSlotReservationDetail, String>{
-    
+public interface ResourceSlotReservationDetailRepository extends PagingAndSortingRepository<ResourceSlotReservationDetail, String>, JpaRepository<ResourceSlotReservationDetail, String> {
+
 }

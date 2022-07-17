@@ -53,7 +53,9 @@ public class ResourceSlotReservationDetailController {
 
     @GetMapping(path = {""}, name = "resource-slot-reservation-detail-get", produces = "application/json")
     public ResponseEntity<HttpResponse> getResourceSlotReservationDetails(HttpServletRequest request,
-            @RequestParam(name = "storeId") String storeId) {
+            @RequestParam(name = "storeId") String storeId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
 
         String logPrefix = request.getRequestURI();
         HttpResponse response = new HttpResponse(request.getRequestURI());

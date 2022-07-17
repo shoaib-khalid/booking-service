@@ -153,10 +153,12 @@ public class ResourceController {
         response.setData(resourceRepository.save(resource));
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
-    
+
     @GetMapping(path = {""}, name = "resource-get-all", produces = "application/json")
     public ResponseEntity<HttpResponse> getResources(HttpServletRequest request,
-            @RequestParam(name = "storeId", required = true) String storeId) {
+            @RequestParam(name = "storeId", required = true) String storeId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int pageSize) {
 
         String logPrefix = request.getRequestURI();
         HttpResponse response = new HttpResponse(request.getRequestURI());
@@ -204,7 +206,7 @@ public class ResourceController {
             response.setError("resource not found");
             return ResponseEntity.status(response.getStatus()).body(response);
         }
-        
+
         response.setStatus(HttpStatus.OK);
         response.setData(optionalResource.get());
         return ResponseEntity.status(response.getStatus()).body(response);
@@ -240,5 +242,5 @@ public class ResourceController {
         response.setStatus(HttpStatus.OK);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
-    
+
 }

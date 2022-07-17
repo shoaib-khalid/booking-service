@@ -6,11 +6,12 @@ package com.kalsym.service.vertical.repository;
 
 import com.kalsym.service.vertical.model.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  *
  * @author hasan
  */
-public interface ResourceRepository extends JpaRepository<Resource, String> {
+public interface ResourceRepository extends PagingAndSortingRepository<Resource, String>, JpaRepository<Resource, String> {
     //List<ResourceAvailability> findByProductId(String productId);
 }

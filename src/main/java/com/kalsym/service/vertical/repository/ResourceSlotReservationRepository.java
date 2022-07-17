@@ -7,6 +7,7 @@ package com.kalsym.service.vertical.repository;
 import com.kalsym.service.vertical.model.ResourceSlotReservation;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,8 +15,9 @@ import org.springframework.stereotype.Repository;
  * @author hasan
  */
 @Repository
-public interface ResourceSlotReservationRepository extends JpaRepository<ResourceSlotReservation, String> {
+public interface ResourceSlotReservationRepository extends PagingAndSortingRepository<ResourceSlotReservation, String>, JpaRepository<ResourceSlotReservation, String> {
+
     List<ResourceSlotReservation> findByIsReserved(Boolean isReserved);
+
     List<ResourceSlotReservation> findByResourceAvailabilityId(String resourceAvailabilityId);
-    //List<ReservationSlot> findByStoreId(String storeId);
 }
